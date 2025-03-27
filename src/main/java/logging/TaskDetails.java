@@ -7,7 +7,7 @@ public class TaskDetails {
     private String taskName;
     private LocalTime startTime;
     private LocalTime endTime;
-
+    private long durationInSeconds;
 
     public String getTaskName() {
         return taskName;
@@ -28,6 +28,13 @@ public class TaskDetails {
     }
     public void setEndTime(LocalTime endTime) {
         this.endTime = endTime;
+    }
+
+    public long getDurationInSeconds() {
+        return durationInSeconds;
+    }
+    public void setDurationInSeconds(long durationInSeconds) {
+        this.durationInSeconds = durationInSeconds;
     }
 
 }

@@ -1,8 +1,8 @@
 package logging;
 
 import java.io.*;
+import java.time.Duration;
 import java.time.LocalTime;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Scanner;
 
@@ -37,10 +37,37 @@ public class LogMonitor {
             String startOrEnd = taskDetailsArray[2].trim(); // removing the leading space from the string
             int currentTaskID = Integer.parseInt(taskDetailsArray[3]);
 
-            System.out.println(startOrEnd);
+//            if we are getting the start time, create a new TaskDetails object and add it to the hash map allTasks
+            if (startOrEnd.equals("START")) {
+                TaskDetails tdToAdd = new TaskDetails();
+                tdToAdd.setStartTime(currentTime);
+                tdToAdd.setTaskName(currentTaskName);
 
+                allTasks.put(currentTaskID, tdToAdd);
 
-//            sb.append(line).append("\n");
+//            if we are getting the end time instead
+            } else {
+//                get the task details stored in the hash map and add in the end time and duration for the task
+                TaskDetails tdToGet = allTasks.get(currentTaskID);
+                tdToGet.setEndTime(currentTime);
+
+                long duration = Duration.between(tdToGet.getStartTime(), currentTime).getSeconds();
+                tdToGet.setDurationInSeconds(duration);
+
+//                updates the value in the hash map
+                allTasks.replace(currentTaskID, tdToGet);
+
+//                prints an error if longer than 10 minutes (600 seconds)
+                if (duration > 600) {
+                    String msg = "ERROR: Duration of task with ID " + currentTaskID + " has exceeded 10 minutes.\n";
+                    sb.append(msg);
+//                 prints a warning if longer than 5 minutes (300 seconds)
+                } else if (duration > 300) {
+                    String msg = "WARNING: Duration of task with ID " + currentTaskID + " has exceeded 5 minutes.\n";
+                    sb.append(msg);
+                }
+            }
+
         }
         scanner.close();
         return sb.toString();
