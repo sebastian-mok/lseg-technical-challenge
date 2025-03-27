@@ -11,7 +11,20 @@ public class LogMonitor {
     public static void main(String[] args) throws IOException {
         try {
             File file = new File("src/main/resources/logs.log");
-            System.out.println(logParser(file));
+
+            String output = logParser(file);
+            System.out.println(output);
+
+            File outputFile = new File("output.log");
+            if (!outputFile.exists()) {
+                outputFile.createNewFile();
+            }
+
+            FileWriter fw = new FileWriter(outputFile.getAbsoluteFile());
+            BufferedWriter bw = new BufferedWriter(fw);
+            bw.write(output);
+            bw.close();
+
         } catch (IOException e) {
             throw new FileNotFoundException();
         }
